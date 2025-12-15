@@ -53,10 +53,12 @@ func UnaryClientLogging(logger *zap.Logger) grpc.UnaryClientInterceptor {
 		if err != nil {
 			fields = append(fields, zap.Error(err))
 			logger.Error("grpc client call failed", fields...)
+
 			return err
 		}
 
 		logger.Info("grpc client call", fields...)
+
 		return nil
 	}
 }
@@ -96,10 +98,12 @@ func StreamClientLogging(logger *zap.Logger) grpc.StreamClientInterceptor {
 		if err != nil {
 			fields = append(fields, zap.Error(err))
 			logger.Error("grpc client stream failed", fields...)
+
 			return nil, err
 		}
 
 		logger.Info("grpc client stream", fields...)
+
 		return clientStream, nil
 	}
 }

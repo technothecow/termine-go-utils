@@ -51,10 +51,12 @@ func Logging(logger *zap.Logger) echo.MiddlewareFunc {
 				c.Error(err)
 				fields = append(fields, zap.Error(err))
 				logger.Error("http request failed", fields...)
+
 				return err
 			}
 
 			logger.Info("http request", fields...)
+
 			return nil
 		}
 	}
@@ -71,11 +73,12 @@ func Recovery(logger *zap.Logger) echo.MiddlewareFunc {
 		StackSize:         1 << 10, // 1KB
 		DisableStackAll:   false,
 		DisablePrintStack: true,
-		LogErrorFunc: func(c echo.Context, err error, stack []byte) error {
+		LogErrorFunc: func(_ echo.Context, err error, stack []byte) error {
 			logger.Error("panic recovered in http handler",
 				zap.Error(err),
 				zap.ByteString("stack", stack),
 			)
+
 			return err
 		},
 	})

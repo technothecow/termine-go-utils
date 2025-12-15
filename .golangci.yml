@@ -1,0 +1,173 @@
+version: 2
+
+run:
+  deadline: 10m
+  tests: true
+  skip-dirs:
+    - bin$
+    - \.git$
+    - vendor$
+    - internal/generated$
+    - internal/generated
+    - migrations$
+  skip-files: []
+
+linters:
+  disable-all: true
+  enable:
+    - asciicheck
+    - bodyclose
+    - dupl
+    - errcheck
+    - gocheckcompilerdirectives
+    - goconst
+    - gocritic
+    - mnd
+    - goprintffuncname
+    - iface
+    - nlreturn
+    - fatcontext
+    - govet
+    - ineffassign
+    - lll
+    - misspell
+    - nakedret
+    - noctx
+    - nolintlint
+    - staticcheck
+    - unconvert
+    - unparam
+    - unused
+    - revive
+    # - whitespace # use later
+
+  settings:
+    depguard:
+      list-type: blacklist
+      include-go-root: false
+      packages: []
+    dupl:
+      threshold: 200
+    funlen:
+      lines: -1
+      statements: 50
+    goconst:
+      min-len: 2
+      min-occurrences: 3
+    gocyclo:
+      min-complexity: 15
+    lll:
+      line-length: 140
+    gofmt:
+      rewrite-rules:
+        - pattern: "interface{}"
+          replacement: "any"
+    staticcheck:
+      checks:
+        - all
+        - "-ST1000"
+        - "-ST1003"
+        - "-SA1016"
+        - "-QF1008"
+    revive:
+      rules:
+        - name: unexported-return
+          disabled: true
+        - name: unused-parameter
+        - name: exported
+          disabled: true
+        - name: var-naming
+          disabled: true
+    mnd:
+      checks:
+        - argument
+        - case
+        - condition
+        - return
+      ignored-numbers:
+        - "0"
+        - "1"
+        - "2"
+        - "3"
+        - "10"
+      ignored-functions:
+        - strings.SplitN
+    govet:
+      check-shadowing: true
+    nolintlint:
+      allow-unused: false # report any unused nolint directives
+      require-explanation: false # don't require an explanation for nolint directives
+      require-specific: true # don't require nolint directives to be specific about which linter is being skipped
+    whitespace:
+      multi-if: true
+      multi-func: true
+    iface:
+      enable:
+        - opaque
+    exhuststruct:
+      exclude:
+        - ".+/tron"
+
+  exclusions:
+    rules:
+      - path: _test\.go
+        linters:
+          - mnd
+          - exhaustruct
+          - noctx
+      - linters:
+          - lll
+        source: "^//go:generate "
+      - text: 'shadow: declaration of "(err|ctx)" shadows declaration at'
+        linters: [govet]
+    paths:
+      - internal/generated
+      - docs
+      - vendor
+
+formatters:
+  enable:
+    - goimports # checks if the code and import statements are formatted according to the 'goimports' command
+    - golines # checks if code is formatted, and fixes long lines
+    - gofmt
+    - gci
+
+  settings:
+    golines:
+      max-len: 140
+    gci:
+      sections:
+        - standard
+        - default
+        - localmodule
+      section-separators:
+        - newline
+    # - swaggo
+
+  exclusions:
+    paths:
+      - internal/generated
+      - docs
+      - vendor
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
+  # new-from-rev: origin/master
+  exclude:
+    - "should have comment"
+    - "always receives"
+    - "should not use underscores in package names"
+    - "parameter .* is always"
+    - "comment on exported .* should be of the form"
+    - "Use of weak cryptographic primitive"
+    - "can be `fmt.Stringer`"
+    - "can be `github.com/gogo/protobuf/proto.Message`"
+    - 'ST1016: methods on the same type should have the same receiver name \(seen \d+x "[^"]+", 4x "v"\)'
+    - 'ST1016: methods on the same type should have the same receiver name \(seen 4x "v", \d+x "[^"]+"\)'
+    - 'ST1016: methods on the same type should have the same receiver name \(seen \d+x "[^"]+", \d+x "srv"\)'
+    - 'ST1016: methods on the same type should have the same receiver name \(seen \d+x "srv", \d+x "[^"]+"\)'
+    - '\.MarshalJSON - result 1 \(error\) is always nil'
+    - '\.Value - result 1 \(error\) is always nil'
+    - '\.Directive` - .* is unused'
+  # Excluding configuration per-path, per-linter, per-text and per-source
