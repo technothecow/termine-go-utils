@@ -1,4 +1,4 @@
-module github.com/technothecow/termine-go-utils
+module git.termine.vpn/termine/termine-go-utils
 
 go 1.24.0
 

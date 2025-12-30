@@ -39,7 +39,7 @@ linters:
     - unparam
     - unused
     - revive
-    # - whitespace # use later
+    - whitespace
 
   settings:
     depguard:
@@ -104,9 +104,9 @@ linters:
     iface:
       enable:
         - opaque
-    exhuststruct:
+    exhaustruct:
       exclude:
-        - ".+/tron"
+        - ".+/example"
 
   exclusions:
     rules:

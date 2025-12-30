@@ -33,6 +33,7 @@ func UnaryClientLogging(logger *zap.Logger) grpc.UnaryClientInterceptor {
 		invoker grpc.UnaryInvoker,
 		opts ...grpc.CallOption,
 	) error {
+
 		start := time.Now()
 		err := invoker(ctx, method, req, reply, cc, opts...)
 		dur := time.Since(start)
@@ -78,6 +79,7 @@ func StreamClientLogging(logger *zap.Logger) grpc.StreamClientInterceptor {
 		streamer grpc.Streamer,
 		opts ...grpc.CallOption,
 	) (grpc.ClientStream, error) {
+
 		start := time.Now()
 		clientStream, err := streamer(ctx, desc, cc, method, opts...)
 		dur := time.Since(start)
@@ -123,6 +125,7 @@ func UnaryClientRecovery(logger *zap.Logger) grpc.UnaryClientInterceptor {
 		invoker grpc.UnaryInvoker,
 		opts ...grpc.CallOption,
 	) (err error) {
+
 		defer func() {
 			if r := recover(); r != nil {
 				stack := debug.Stack()
@@ -154,6 +157,7 @@ func StreamClientRecovery(logger *zap.Logger) grpc.StreamClientInterceptor {
 		streamer grpc.Streamer,
 		opts ...grpc.CallOption,
 	) (clientStream grpc.ClientStream, err error) {
+
 		defer func() {
 			if r := recover(); r != nil {
 				stack := debug.Stack()
